@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="KaamSaathi connects local workers with clear, nearby work opportunities.">
+<title>KaamSaathi — Work, on your terms</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap');
+
+/* ---------- Tokens ---------- */
+:root{
+  --bg:#f6f4ee; --surface:#fff;
+  --ink:#1d2823; --muted:#5b655f;
+  --line:#ddd9cc; --line-strong:#b9b4a3;
+  --brand:#1f5a47; --brand-dark:#174536; --brand-tint:#e4efe8;
+  --warn-ink:#7a4a00; --warn-tint:#fbf1d8;
+  --font:'DM Sans','Noto Sans Devanagari',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --lh:1.5; --lh-head:1.25;
+  --tabbar:64px;
+}
+html[lang=hi],html[lang=mr]{font-size:106.25%;--lh:1.65;--lh-head:1.4}
+
+/* ---------- Base ---------- */
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/var(--lh) var(--font)}
+h1,h2,h3,p,ul,dl,dd{margin:0}
+ul{padding:0}
+button{font:inherit;color:inherit;cursor:pointer}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;left:12px;top:-80px;z-index:100;background:var(--ink);color:#fff;padding:12px 16px;border-radius:10px;font-weight:600}
+.skip:focus{top:12px}
+.ico{width:1.25rem;height:1.25rem;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+html.locked{overflow:hidden}
+
+/* ---------- Buttons ---------- */
+.btn-primary,.btn-secondary{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 18px;border-radius:12px;font-weight:700;font-size:1rem;line-height:1.3;border:1.5px solid var(--brand)}
+.btn-primary{background:var(--brand);color:#fff}
+.btn-primary:hover{background:var(--brand-dark);border-color:var(--brand-dark)}
+.btn-secondary{background:#fff;color:var(--brand-dark)}
+.btn-secondary:hover{background:var(--brand-tint)}
+.btn-secondary.on{background:var(--brand-tint)}
+.btn-secondary.on .ico{fill:currentColor}
+.btn-secondary.wide{width:100%}
+.link{display:inline-flex;align-items:center;gap:2px;min-height:44px;padding:0;background:none;border:0;color:var(--brand);font-weight:700;font-size:.9375rem}
+.link:hover{color:var(--brand-dark);text-decoration:underline;text-underline-offset:3px}
+.icon-btn{flex:none;width:44px;height:44px;display:grid;place-items:center;border:0;border-radius:50%;background:#efece3}
+.icon-btn:hover{background:#e4e0d4}
+
+/* ---------- Header + navigation (one nav, two layouts) ---------- */
+.topbar{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1080px;margin:0 auto;padding:8px 12px;min-height:60px;display:flex;align-items:center;gap:8px}
+.brand{display:flex;align-items:center;gap:10px;min-height:44px;margin-right:auto;color:var(--ink);text-decoration:none;min-width:0}
+.brandmark{width:36px;height:36px;flex:none;border-radius:10px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:1.25rem;font-weight:700;line-height:1}
+.brand strong{display:block;font-size:1.0625rem;line-height:1.2;font-weight:700}
+.brand small{display:none;color:var(--muted);font-size:.8125rem;line-height:1.3}
+
+.lang{display:flex;flex:none;border:1px solid var(--line-strong);border-radius:10px;overflow:hidden}
+.lang button{min-height:44px;min-width:44px;padding:0 9px;border:0;background:transparent;font-size:.875rem;font-weight:600}
+.lang button+button{border-left:1px solid var(--line-strong)}
+.lang button:hover{background:var(--brand-tint)}
+.lang button[aria-pressed=true]{background:var(--brand);color:#fff}
+.lang button:focus-visible{outline-offset:-3px}
+.lang button[aria-pressed=true]:focus-visible{outline-color:#fff}
+
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tab{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:var(--tabbar);padding:6px 4px;border:0;background:none;color:var(--muted);font-size:.8125rem;font-weight:600;line-height:1.25;text-align:center}
+.tab .ico{width:1.5rem;height:1.5rem}
+.tab:focus-visible{outline-offset:-4px}
+.tab[aria-current=page]{color:var(--brand)}
+.tab[aria-current=page]::before{content:'';position:absolute;top:0;left:22%;right:22%;height:3px;border-radius:0 0 3px 3px;background:var(--brand)}
+.badge{position:absolute;top:6px;left:calc(50% + 6px);min-width:1.25rem;height:1.25rem;padding:0 5px;border-radius:999px;background:var(--brand);color:#fff;font-size:.75rem;font-weight:700;line-height:1.25rem;text-align:center}
+
+/* ---------- Page layout ---------- */
+.page{max-width:1080px;margin:0 auto;padding:20px 16px calc(var(--tabbar) + 28px + env(safe-area-inset-bottom))}
+.main{min-width:0}
+.aside{display:none}
+.page-title{font-size:1.75rem;line-height:var(--lh-head);font-weight:700}
+.where{display:flex;align-items:center;gap:6px;margin-top:6px;color:var(--muted);font-size:.9375rem}
+
+/* ---------- Search + filters ---------- */
+.search{display:flex;gap:8px;margin-top:16px}
+.field{position:relative;flex:1;min-width:0}
+.field .ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:1.25rem;height:1.25rem;color:var(--muted);pointer-events:none}
+.field input{width:100%;height:52px;padding:0 12px 0 44px;border:1.5px solid var(--line-strong);border-radius:12px;background:#fff;color:var(--ink);font:inherit;font-size:1rem;-webkit-appearance:none;appearance:none}
+.field input::placeholder{color:#68716b;opacity:1}
+.field input:focus{border-color:var(--brand)}
+.search .btn-primary{min-height:52px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line-strong);background:#fff;font-size:.9375rem;font-weight:500}
+.chip:hover{border-color:var(--brand)}
+.chip[aria-pressed=true]{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+
+.count{margin:20px 0 12px;color:var(--muted);font-size:.9375rem;font-weight:500}
+
+/* ---------- Job list ---------- */
+.joblist{list-style:none;display:grid;gap:12px;scroll-margin-top:80px}
+.joblist:focus{outline:none}
+.job{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"head save" "pay pay" "facts facts" "foot foot";column-gap:12px;row-gap:12px;padding:16px;background:#fff;border:1px solid var(--line);border-radius:16px}
+.job:hover{border-color:var(--line-strong)}
+.job-head{grid-area:head;min-width:0}
+.job-title{font-size:1.125rem;line-height:var(--lh-head);font-weight:700}
+.job-open{padding:0;border:0;background:none;text-align:left;font:inherit;font-weight:inherit;color:inherit}
+.job-open::after{content:'';position:absolute;inset:0;border-radius:16px}
+.job-open:focus-visible{outline:none}
+.job-open:focus-visible::after{outline:3px solid var(--brand);outline-offset:2px}
+.company{margin-top:2px;color:var(--muted);font-size:.9375rem}
+.save{grid-area:save;position:relative;z-index:1;align-self:start;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line-strong);background:#fff;font-size:.9375rem;font-weight:600}
+.save:hover{border-color:var(--brand)}
+.save.on{background:var(--brand-tint);border-color:var(--brand);color:var(--brand-dark)}
+.save.on .ico{fill:currentColor}
+.pay{grid-area:pay;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px}
+.pay-amt{font-size:1.5rem;line-height:1.15;font-weight:700;color:var(--brand-dark);font-variant-numeric:tabular-nums}
+.pay-unit{color:var(--muted);font-size:.9375rem}
+.facts{grid-area:facts;display:grid;gap:8px}
+.facts dd{display:flex;align-items:flex-start;gap:10px}
+.facts .ico{margin-top:.2em;color:var(--muted)}
+.job-foot{grid-area:foot;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;padding-top:12px;border-top:1px solid var(--line)}
+.status{display:flex;align-items:flex-start;gap:8px;padding:6px 10px;border-radius:8px;font-size:.9375rem;font-weight:600;line-height:1.35}
+.status .ico{margin-top:.1em}
+.status.ok{background:var(--brand-tint);color:var(--brand-dark)}
+.status.no{background:var(--warn-tint);color:var(--warn-ink)}
+.more{display:inline-flex;align-items:center;gap:2px;margin-left:auto;color:var(--brand);font-size:.9375rem;font-weight:700}
+.empty{padding:28px 20px;text-align:center;background:#fff;border:1.5px dashed var(--line-strong);border-radius:16px}
+.empty p{margin-bottom:16px;max-width:32ch;margin-inline:auto}
+
+@media(min-width:720px){
+  .job{grid-template-areas:"head pay" "facts save" "foot foot";padding:20px;row-gap:14px}
+  .pay{justify-self:end;flex-direction:column;align-items:flex-end;gap:0}
+  .save{align-self:end}
+}
+
+/* ---------- Side panel (desktop only; same content lives in the Profile and Help dialogs on phones) ---------- */
+.block{padding:20px 0;border-bottom:1px solid var(--line)}
+.block:first-child{padding-top:0}
+.block:last-child{border-bottom:0}
+.block h2{font-size:1rem;line-height:var(--lh-head);font-weight:700;margin-bottom:10px}
+.block>p{color:var(--muted);font-size:.9375rem;margin-bottom:12px}
+.who{display:flex;flex-direction:column;margin-bottom:8px}
+.who b{color:var(--ink)}
+.who span{color:var(--muted);font-size:.9375rem}
+.skills{list-style:none;margin:8px 0 4px;display:grid;gap:8px}
+.skills li{display:flex;align-items:center;gap:8px;font-size:.9375rem}
+.skills .ico{color:var(--brand)}
+.skills b{margin-left:auto;font-weight:600;color:var(--muted)}
+.tips{list-style:none;display:grid;gap:14px}
+.tips li{display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;align-items:start}
+.tip-ico{width:36px;height:36px;border-radius:10px;background:var(--brand-tint);color:var(--brand);display:grid;place-items:center}
+.tips b{display:block;font-size:.9375rem;line-height:1.35}
+.tips span.d{display:block;margin-top:2px;color:var(--muted);font-size:.9375rem;line-height:1.45}
+
+/* ---------- Dialog / bottom sheet ---------- */
+.overlay{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;background:rgba(29,40,35,.55)}
+.overlay.open{display:flex}
+.sheet{display:flex;flex-direction:column;width:100%;max-height:92vh;max-height:92dvh;background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -8px 40px rgba(0,0,0,.2);animation:rise .22s ease-out}
+.sheet:focus{outline:none}
+@keyframes rise{from{transform:translateY(24px);opacity:.5}to{transform:none;opacity:1}}
+.sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px 12px 8px 20px}
+.sheet-head h2{margin-top:8px;font-size:1.375rem;line-height:var(--lh-head);font-weight:700}
+.sheet-body{padding:4px 20px 20px;overflow-y:auto;overscroll-behavior:contain}
+.sheet-body h3{margin:20px 0 10px;font-size:1rem;line-height:var(--lh-head);font-weight:700}
+.sheet-body p{line-height:1.6}
+.sheet-body .desc{margin-top:16px}
+.sheet-body .pay{margin-top:12px}
+.sheet-body .status{width:fit-content;margin-top:10px}
+.sheet-foot{display:grid;gap:10px;padding:12px 20px calc(16px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:#fff}
+.foot-actions{display:grid;grid-template-columns:1fr 1.2fr;gap:10px}
+.note{color:var(--muted);font-size:.875rem;line-height:1.5}
+.terms{margin-top:16px;border-top:1px solid var(--line)}
+.terms div{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.terms dt{color:var(--muted)}
+.terms dd{font-weight:600;text-align:right}
+.checks{margin:20px 0 0;padding:14px 16px;border-radius:12px;background:var(--brand-tint)}
+.checks.none{background:var(--warn-tint)}
+.checks h3{margin:0 0 6px}
+.checks ul{list-style:none}
+.check{display:flex;align-items:center;gap:8px;padding:6px 0}
+.check b{margin-left:auto;font-weight:600}
+.check.yes{color:var(--brand-dark)}
+.check.no{color:var(--warn-ink)}
+.checks p{margin-top:8px;font-size:.9375rem}
+.plain{margin:0;padding-left:1.25em}
+.plain li{margin-bottom:6px;line-height:1.55}
+
+/* ---------- Toast ---------- */
+.toast{position:fixed;left:50%;bottom:calc(var(--tabbar) + 16px + env(safe-area-inset-bottom));z-index:60;width:max-content;max-width:min(92vw,420px);padding:12px 16px;border-radius:12px;background:var(--ink);color:#fff;font-size:.9375rem;line-height:1.45;text-align:center;opacity:0;transform:translate(-50%,12px);pointer-events:none;transition:opacity .2s,transform .2s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- Very small phones ---------- */
+@media(max-width:359px){.brand{gap:6px}.brandmark{width:30px;height:30px;font-size:1.0625rem}.brand strong{font-size:.9375rem}.lang button{padding:0 5px;min-width:40px}.page-title{font-size:1.5rem}}
+
+/* ---------- Wider screens ---------- */
+@media(min-width:520px){.topbar-in{padding:8px 16px;gap:12px}}
+@media(min-width:1000px){.brand small{display:block}}
+@media(min-width:900px){
+  .topbar-in{padding:10px 24px;gap:20px}
+  .tabs{position:static;display:flex;gap:4px;padding:0;border:0;background:none}
+  .tab{flex-direction:row;gap:8px;min-height:44px;padding:0 14px;border-radius:10px;font-size:.9375rem;white-space:nowrap}
+  .tab .ico{width:1.25rem;height:1.25rem}
+  .tab:hover{background:#f0ede4}
+  .tab[aria-current=page]{background:var(--brand-tint);color:var(--brand-dark)}
+  .tab[aria-current=page]::before{display:none}
+  .tab:focus-visible{outline-offset:2px}
+  .badge{position:static;margin-left:2px}
+  .page{padding:32px 24px 56px}
+  .page-title{font-size:2rem}
+  .overlay{align-items:center;padding:24px}
+  .sheet{width:min(540px,100%);max-height:88vh;max-height:88dvh;border-radius:20px}
+  .toast{bottom:24px}
+}
+@media(min-width:960px){
+  .page{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:48px}
+  .aside{display:block;position:sticky;top:96px;align-self:start}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-7.5-10.3A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.6c0 5.7-7.5 10.3-7.5 10.3z"/></symbol>
+  <symbol id="i-briefcase" viewBox="0 0 24 24"><rect x="3" y="7.5" width="18" height="12.5" rx="2.5"/><path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5M3 13h18"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.8"/><path d="M4.5 20c.8-3.6 3.8-5.5 7.5-5.5s6.7 1.9 7.5 5.5"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.6 2.2c-.8.4-1.2 1-1.2 1.9"/><circle cx="12" cy="16.9" r=".9" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.8 2.8L16 9.6"/></symbol>
+  <symbol id="i-minus-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="7.8" r=".9" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-rupee" viewBox="0 0 24 24"><path d="M7 5.5h10M7 10h10M8 5.5c4.5 0 6.5 1.8 6.5 4.2S12.5 14 8 14h-.5l7 6"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+</svg>
+
+<a class="skip" href="#jobs" data-i18n>Skip to jobs</a>
+
+<div id="app">
+  <header class="topbar"><div class="topbar-in">
+    <a class="brand" href="#" id="brand" aria-label="KaamSaathi">
+      <span class="brandmark" aria-hidden="true">क</span>
+      <span><strong>KaamSaathi</strong><small data-i18n>Work, on your terms</small></span>
+    </a>
+    <nav class="tabs" data-i18n-attr="aria-label:Main menu">
+      <button type="button" class="tab" data-tab="home" aria-current="page"><svg class="ico" aria-hidden="true"><use href="#i-briefcase"/></svg><span data-i18n>Find work</span></button>
+      <button type="button" class="tab" data-tab="saved"><svg class="ico" aria-hidden="true"><use href="#i-heart"/></svg><span data-i18n>Saved jobs</span><span class="badge" id="badge" hidden></span></button>
+      <button type="button" class="tab" data-tab="profile" aria-haspopup="dialog"><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg><span data-i18n>Profile</span></button>
+      <button type="button" class="tab" data-tab="help" aria-haspopup="dialog"><svg class="ico" aria-hidden="true"><use href="#i-help"/></svg><span data-i18n>Help</span></button>
+    </nav>
+    <div class="lang" role="group" data-i18n-attr="aria-label:Language">
+      <button type="button" data-lang="en" lang="en" aria-label="English" aria-pressed="true">EN</button>
+      <button type="button" data-lang="hi" lang="hi" aria-label="हिन्दी" aria-pressed="false">हिंदी</button>
+      <button type="button" data-lang="mr" lang="mr" aria-label="मराठी" aria-pressed="false">मराठी</button>
+    </div>
+  </div></header>
+
+  <div class="page">
+    <main class="main" id="main">
+      <h1 class="page-title" id="pageTitle">Find work near you</h1>
+      <p class="where" id="where"><svg class="ico" aria-hidden="true"><use href="#i-pin"/></svg><span data-i18n>Near Shivajinagar, Pune</span></p>
+
+      <form class="search" id="searchForm" role="search">
+        <div class="field">
+          <label class="sr-only" for="search" data-i18n>Search jobs</label>
+          <svg class="ico" aria-hidden="true"><use href="#i-search"/></svg>
+          <input id="search" type="search" enterkeyhint="search" autocomplete="off" data-i18n-attr="placeholder:Search job or place">
+        </div>
+        <button class="btn-primary" type="submit" data-i18n>Search</button>
+      </form>
+
+      <div class="chips" id="chips" role="group" data-i18n-attr="aria-label:Filter jobs">
+        <button type="button" class="chip" data-filter="All work" aria-pressed="true" data-i18n>All work</button>
+        <button type="button" class="chip" data-filter="Today" aria-pressed="false" data-i18n>Today</button>
+        <button type="button" class="chip" data-filter="Short-term" aria-pressed="false" data-i18n>Short-term</button>
+        <button type="button" class="chip" data-filter="Long-term" aria-pressed="false" data-i18n>Long-term</button>
+        <button type="button" class="chip" data-filter="Within 3 km" aria-pressed="false" data-i18n>Within 3 km</button>
+      </div>
+
+      <p class="count" id="count" role="status"></p>
+      <ul class="joblist" id="jobs" tabindex="-1"></ul>
+    </main>
+    <aside class="aside" id="aside"></aside>
+  </div>
+</div>
+
+<div class="overlay" id="overlay"><div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="dlgTitle" tabindex="-1"></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const T={"hi":{"Work, on your terms":"काम, आपकी शर्तों पर","KaamSaathi — Work, on your terms":"कामसाथी — काम, आपकी शर्तों पर","Shivajinagar, Pune":"शिवाजीनगर, पुणे","Raju Pawar":"राजू पवार","Painter · Pune":"पेंटर · पुणे","Find work":"काम खोजें","Saved jobs":"सहेजे गए काम","Search":"खोजें","Search jobs":"काम खोजें","All work":"सभी काम","Today":"आज","Short-term":"कम अवधि","Long-term":"लंबी अवधि","opportunities":"अवसर","Your skills card":"आपका स्किल कार्ड","House painting":"घर की पेंटिंग","Wall putty":"दीवार की पुट्टी","Available this week":"इस हफ़्ते उपलब्ध","Pay shown upfront":"मज़दूरी पहले ही दिखती है","Agree on the amount before you accept.":"हाँ कहने से पहले रकम तय कर लें।","Check the details":"जानकारी जाँच लें","Confirm hours, location and materials.":"समय, जगह और सामान पक्का कर लें।","Something feel wrong?":"कुछ गड़बड़ लगे?","Get help without sharing your password or OTP.":"पासवर्ड या OTP बताए बिना मदद लें।","Support & your rights":"सहायता और आपके अधिकार","Find useful documents, worker support and nearby help in one place.":"ज़रूरी दस्तावेज़, श्रमिक सहायता और पास की मदद एक ही जगह पाएँ।","Work":"काम","Saved":"सहेजा गया","Profile":"प्रोफ़ाइल","Help":"मदद","Close":"बंद करें","Paint 2BHK apartment":"2BHK फ़्लैट में पेंटिंग","Direct from homeowner":"सीधे मकान मालिक से","per day":"प्रति दिन","Model Colony · 2.1 km":"मॉडल कॉलोनी · 2.1 किमी","Today, 10:00 am – 6:00 pm":"आज, सुबह 10:00 – शाम 6:00 बजे","2 days":"2 दिन","Painting":"पेंटिंग","Interior walls need a fresh coat. Paint and basic tools are provided. Please call before travelling to confirm the gate number.":"अंदर की दीवारों पर नया रंग चढ़ाना है। पेंट और ज़रूरी औज़ार दिए जाएँगे। निकलने से पहले फ़ोन करके गेट नंबर पक्का कर लें।","Wall putty and touch-up work":"दीवार की पुट्टी और टच-अप का काम","Sahyadri Buildworks":"सह्याद्री बिल्डवर्क्स","Deccan · 3.4 km":"डेक्कन · 3.4 किमी","Starts tomorrow":"कल से शुरू","4 days":"4 दिन","One experienced painter needed for finishing work in a small office. Materials provided. Payment at the end of each day.":"एक छोटे ऑफ़िस में फ़िनिशिंग के काम के लिए एक अनुभवी पेंटर चाहिए। सामान दिया जाएगा। हर दिन के अंत में भुगतान।","Painter for housing society":"हाउसिंग सोसाइटी के लिए पेंटर","Greenview Society":"ग्रीनव्यू सोसाइटी","per month":"प्रति माह","Aundh · 5.8 km":"औंध · 5.8 किमी","Flexible start":"शुरुआत की तारीख़ लचीली","Looking for a painter for regular maintenance and repainting. Monday to Saturday, 9 am to 5 pm. Weekly day off by arrangement.":"नियमित रखरखाव और दोबारा पेंटिंग के लिए पेंटर चाहिए। सोमवार से शनिवार, सुबह 9 से शाम 5 बजे तक। साप्ताहिक छुट्टी आपसी सहमति से।","Help repainting shop shutters":"दुकान के शटर दोबारा रंगने में मदद","Local shop owner":"स्थानीय दुकानदार","for the job":"पूरे काम के","Kasba Peth · 1.6 km":"कसबा पेठ · 1.6 किमी","Today, after 4:00 pm":"आज, शाम 4:00 बजे के बाद","Half day":"आधा दिन","Two metal shutters need a fresh coat before the shop opens tomorrow. Please agree on paint type and final payment with the owner first.":"कल दुकान खुलने से पहले दो लोहे के शटरों पर नया रंग चढ़ाना है। पहले मालिक से पेंट का प्रकार और अंतिम भुगतान तय कर लें।","Pay":"मज़दूरी","When":"कब","Where":"कहाँ","I’m interested":"मुझे रुचि है","This prototype won’t send your details or contact the employer.":"यह प्रोटोटाइप आपकी जानकारी नहीं भेजेगा और न ही मालिक से संपर्क करेगा।","Clear filters":"फ़िल्टर हटाएँ","Got it":"ठीक है","Find nearby worker facilitation centres, learn which documents may help with registration, and see grievance and welfare scheme information. For real emergencies, contact local emergency services.":"पास के श्रमिक सुविधा केंद्र खोजें, जानें कि पंजीकरण में कौन-से दस्तावेज़ काम आ सकते हैं, और शिकायत व कल्याण योजनाओं की जानकारी देखें। असली आपात स्थिति में स्थानीय आपातकालीन सेवाओं से संपर्क करें।","Your card helps employers understand what you can do, even without a résumé. Add skills like exterior painting, wall putty or brush finishing, and set the days you are available.":"आपका कार्ड बिना रिज़्यूमे के भी मालिकों को बताता है कि आप क्या कर सकते हैं। बाहरी पेंटिंग, दीवार की पुट्टी या ब्रश फ़िनिशिंग जैसे स्किल जोड़ें और उपलब्ध दिन चुनें।","Skip to jobs":"काम की सूची पर जाएँ","Main menu":"मुख्य मेनू","Language":"भाषा","Find work near you":"अपने पास काम खोजें","Your saved jobs":"आपके सहेजे गए काम","Near Shivajinagar, Pune":"शिवाजीनगर, पुणे के पास","Search job or place":"काम या जगह खोजें","Filter jobs":"काम छाँटें","Within 3 km":"3 किमी के भीतर","job":"काम","jobs":"काम","Save":"सहेजें","View details":"विवरण देखें","Pay, place and time checked":"मज़दूरी, जगह और समय जाँचे गए","Details not checked yet":"जानकारी अभी जाँची नहीं गई","How long":"कितने समय","What has been checked":"क्या जाँचा गया है","Checked":"जाँचा गया","Not checked":"जाँचा नहीं गया","This does not confirm who the employer is, and it is not a promise of work or payment. Always confirm the final terms yourself.":"इसका मतलब यह नहीं कि मालिक की पहचान पक्की हो गई है, और यह काम या भुगतान का वादा भी नहीं है। अंतिम शर्तें ख़ुद पक्की कर लें।","Nothing here has been checked yet. Confirm pay, place and time with the owner before you go.":"यहाँ की कोई जानकारी अभी जाँची नहीं गई है। जाने से पहले मालिक से मज़दूरी, जगह और समय पक्का कर लें।","Before you go":"जाने से पहले","Agree on pay, and when you will be paid, before you travel.":"निकलने से पहले मज़दूरी तय कर लें, और यह भी कि पैसे कब मिलेंगे।","Call first to confirm the address and time.":"पहले फ़ोन करके पता और समय पक्का कर लें।","Never share an OTP or PIN, or pay a fee, to get a job.":"काम पाने के लिए कभी OTP या PIN न बताएँ, और न कोई शुल्क दें।","Preview only: nothing was sent to the employer.":"सिर्फ़ प्रीव्यू: मालिक को कुछ नहीं भेजा गया।","You haven’t saved any jobs yet. Tap Save on a job to keep it here.":"आपने अभी कोई काम नहीं सहेजा। किसी काम पर “सहेजें” दबाएँ, वह यहाँ रखा जाएगा।","No jobs found. Try a different word, or clear the filters.":"कोई काम नहीं मिला। दूसरा शब्द आज़माएँ, या फ़िल्टर हटाएँ।","Added":"जोड़ा गया","Yes":"हाँ","About my skills card":"मेरे स्किल कार्ड के बारे में","Editing skills is not available in this preview yet.":"इस प्रीव्यू में स्किल बदलने की सुविधा अभी नहीं है।","Before you accept work":"काम स्वीकार करने से पहले","Explore support options":"सहायता के विकल्प देखें","Support listings are not connected in this preview yet.":"इस प्रीव्यू में सहायता की सूचियाँ अभी जुड़ी नहीं हैं।","What “checked” means":"“जाँचा गया” का मतलब","A job marked “checked” has had its pay, place and time checked. This does not confirm who the employer is, and it is not a promise of work or payment.":"“जाँचा गया” चिह्नित काम की मज़दूरी, जगह और समय जाँचे गए हैं। इसका मतलब यह नहीं कि मालिक की पहचान पक्की है, और यह काम या भुगतान का वादा भी नहीं है।"},"mr":{"Work, on your terms":"काम, तुमच्या अटींवर","KaamSaathi — Work, on your terms":"कामसाथी — काम, तुमच्या अटींवर","Shivajinagar, Pune":"शिवाजीनगर, पुणे","Raju Pawar":"राजू पवार","Painter · Pune":"रंगारी · पुणे","Find work":"काम शोधा","Saved jobs":"जतन केलेली कामे","Search":"शोधा","Search jobs":"काम शोधा","All work":"सर्व कामे","Today":"आज","Short-term":"कमी कालावधी","Long-term":"दीर्घ कालावधी","opportunities":"संधी","Your skills card":"तुमचं स्किल कार्ड","House painting":"घराचं रंगकाम","Wall putty":"भिंतींची पुट्टी","Available this week":"या आठवड्यात उपलब्ध","Pay shown upfront":"मजुरी आधीच दिसते","Agree on the amount before you accept.":"होकार देण्यापूर्वी रक्कम ठरवा.","Check the details":"तपशील तपासा","Confirm hours, location and materials.":"वेळ, ठिकाण आणि साहित्य निश्चित करा.","Something feel wrong?":"काही चुकीचं वाटतंय?","Get help without sharing your password or OTP.":"पासवर्ड किंवा OTP न सांगता मदत मिळवा.","Support & your rights":"मदत आणि तुमचे हक्क","Find useful documents, worker support and nearby help in one place.":"उपयुक्त कागदपत्रे, कामगार मदत आणि जवळची मदत एकाच ठिकाणी.","Work":"काम","Saved":"जतन केले","Profile":"प्रोफाइल","Help":"मदत","Close":"बंद करा","Paint 2BHK apartment":"2BHK फ्लॅटला रंगकाम","Direct from homeowner":"थेट घरमालकाकडून","per day":"प्रतिदिन","Model Colony · 2.1 km":"मॉडेल कॉलनी · 2.1 किमी","Today, 10:00 am – 6:00 pm":"आज, सकाळी 10:00 – संध्याकाळी 6:00","2 days":"2 दिवस","Painting":"रंगकाम","Interior walls need a fresh coat. Paint and basic tools are provided. Please call before travelling to confirm the gate number.":"आतल्या भिंतींना नवीन रंग द्यायचा आहे. रंग आणि मूलभूत अवजारे दिली जातील. निघण्यापूर्वी फोन करून गेट क्रमांक निश्चित करा.","Wall putty and touch-up work":"भिंतींची पुट्टी आणि टच-अपचं काम","Sahyadri Buildworks":"सह्याद्री बिल्डवर्क्स","Deccan · 3.4 km":"डेक्कन · 3.4 किमी","Starts tomorrow":"उद्यापासून सुरू","4 days":"4 दिवस","One experienced painter needed for finishing work in a small office. Materials provided. Payment at the end of each day.":"एका छोट्या ऑफिसमध्ये फिनिशिंगच्या कामासाठी एक अनुभवी रंगारी हवा. साहित्य दिलं जाईल. रोज दिवसाच्या शेवटी पैसे दिले जातील.","Painter for housing society":"गृहनिर्माण सोसायटीसाठी रंगारी","Greenview Society":"ग्रीनव्ह्यू सोसायटी","per month":"दरमहा","Aundh · 5.8 km":"औंध · 5.8 किमी","Flexible start":"सुरुवात लवचिक","Looking for a painter for regular maintenance and repainting. Monday to Saturday, 9 am to 5 pm. Weekly day off by arrangement.":"नियमित देखभाल आणि पुन्हा रंगकामासाठी रंगारी हवा. सोमवार ते शनिवार, सकाळी 9 ते संध्याकाळी 5. साप्ताहिक सुट्टी आपसात ठरवून.","Help repainting shop shutters":"दुकानाचे शटर पुन्हा रंगवण्यात मदत","Local shop owner":"स्थानिक दुकानदार","for the job":"संपूर्ण कामासाठी","Kasba Peth · 1.6 km":"कसबा पेठ · 1.6 किमी","Today, after 4:00 pm":"आज, संध्याकाळी 4:00 नंतर","Half day":"अर्धा दिवस","Two metal shutters need a fresh coat before the shop opens tomorrow. Please agree on paint type and final payment with the owner first.":"उद्या दुकान उघडण्यापूर्वी दोन लोखंडी शटरना नवीन रंग द्यायचा आहे. आधी मालकाशी रंगाचा प्रकार आणि अंतिम मोबदला ठरवा.","Pay":"मजुरी","When":"केव्हा","Where":"कुठे","I’m interested":"मला रस आहे","This prototype won’t send your details or contact the employer.":"हा प्रोटोटाइप तुमची माहिती पाठवणार नाही आणि मालकाशी संपर्क करणार नाही.","Clear filters":"फिल्टर काढा","Got it":"समजलं","Find nearby worker facilitation centres, learn which documents may help with registration, and see grievance and welfare scheme information. For real emergencies, contact local emergency services.":"जवळची कामगार सुविधा केंद्रे शोधा, नोंदणीसाठी कोणती कागदपत्रे उपयोगी ठरू शकतात ते जाणून घ्या, आणि तक्रार व कल्याणकारी योजनांची माहिती पाहा. खऱ्या आणीबाणीत स्थानिक आपत्कालीन सेवांशी संपर्क साधा.","Your card helps employers understand what you can do, even without a résumé. Add skills like exterior painting, wall putty or brush finishing, and set the days you are available.":"तुमचं कार्ड रिझ्युमेशिवायही मालकांना तुम्ही काय करू शकता ते सांगतं. बाहेरचं रंगकाम, भिंतींची पुट्टी किंवा ब्रश फिनिशिंग असे स्किल जोडा आणि तुम्ही उपलब्ध असलेले दिवस निवडा.","Skip to jobs":"कामांच्या यादीकडे जा","Main menu":"मुख्य मेनू","Language":"भाषा","Find work near you":"तुमच्या जवळ काम शोधा","Your saved jobs":"तुम्ही जतन केलेली कामे","Near Shivajinagar, Pune":"शिवाजीनगर, पुणे जवळ","Search job or place":"काम किंवा ठिकाण शोधा","Filter jobs":"कामे फिल्टर करा","Within 3 km":"3 किमी च्या आत","job":"काम","jobs":"कामे","Save":"जतन करा","View details":"तपशील पाहा","Pay, place and time checked":"मजुरी, ठिकाण आणि वेळ तपासले","Details not checked yet":"तपशील अजून तपासलेले नाहीत","How long":"किती काळ","What has been checked":"काय तपासलं आहे","Checked":"तपासले","Not checked":"तपासलेले नाही","This does not confirm who the employer is, and it is not a promise of work or payment. Always confirm the final terms yourself.":"याचा अर्थ मालकाची ओळख पटली असा नाही, आणि हे काम किंवा मोबदल्याचं आश्वासनही नाही. अंतिम अटी स्वतः निश्चित करा.","Nothing here has been checked yet. Confirm pay, place and time with the owner before you go.":"इथली कोणतीही माहिती अजून तपासलेली नाही. जाण्यापूर्वी मालकाकडून मजुरी, ठिकाण आणि वेळ निश्चित करा.","Before you go":"जाण्यापूर्वी","Agree on pay, and when you will be paid, before you travel.":"निघण्यापूर्वी मजुरी ठरवून घ्या, आणि पैसे कधी मिळतील तेही.","Call first to confirm the address and time.":"आधी फोन करून पत्ता आणि वेळ निश्चित करा.","Never share an OTP or PIN, or pay a fee, to get a job.":"काम मिळवण्यासाठी कधीही OTP किंवा PIN सांगू नका, आणि कोणतंही शुल्क भरू नका.","Preview only: nothing was sent to the employer.":"फक्त प्रीव्यू: मालकाला काहीही पाठवलं नाही.","You haven’t saved any jobs yet. Tap Save on a job to keep it here.":"तुम्ही अजून कोणतंही काम जतन केलेलं नाही. एखाद्या कामावर “जतन करा” दाबा, ते इथे ठेवलं जाईल.","No jobs found. Try a different word, or clear the filters.":"एकही काम सापडलं नाही. दुसरा शब्द वापरून पाहा, किंवा फिल्टर काढा.","Added":"जोडलं","Yes":"होय","About my skills card":"माझ्या स्किल कार्डबद्दल","Editing skills is not available in this preview yet.":"या प्रीव्यूमध्ये स्किल बदलण्याची सोय अजून नाही.","Before you accept work":"काम स्वीकारण्यापूर्वी","Explore support options":"मदतीचे पर्याय पाहा","Support listings are not connected in this preview yet.":"या प्रीव्यूमध्ये मदतीच्या याद्या अजून जोडलेल्या नाहीत.","What “checked” means":"“तपासले” म्हणजे काय","A job marked “checked” has had its pay, place and time checked. This does not confirm who the employer is, and it is not a promise of work or payment.":"“तपासले” असं चिन्हांकित कामाची मजुरी, ठिकाण आणि वेळ तपासलेली आहे. याचा अर्थ मालकाची ओळख पटली असा नाही, आणि हे काम किंवा मोबदल्याचं आश्वासनही नाही."}};
+
+/* ---------- Data (sample listings). `checked` lists which details were actually checked for a listing.
+   Wire this to real review data before launch: never mark a detail as checked unless it was. ---------- */
+const ALL_CHECKS=['pay','where','when'];
+const jobs=[
+{id:1,title:'Paint 2BHK apartment',company:'Direct from homeowner',pay:'₹1,200',unit:'per day',place:'Model Colony · 2.1 km',km:2.1,time:'Today, 10:00 am – 6:00 pm',kind:'Today',duration:'2 days',tag:'Painting',checked:['pay','where','when'],desc:'Interior walls need a fresh coat. Paint and basic tools are provided. Please call before travelling to confirm the gate number.'},
+{id:2,title:'Wall putty and touch-up work',company:'Sahyadri Buildworks',pay:'₹900',unit:'per day',place:'Deccan · 3.4 km',km:3.4,time:'Starts tomorrow',kind:'Short-term',duration:'4 days',tag:'Wall putty',checked:['pay','where','when'],desc:'One experienced painter needed for finishing work in a small office. Materials provided. Payment at the end of each day.'},
+{id:3,title:'Painter for housing society',company:'Greenview Society',pay:'₹24,000',unit:'per month',place:'Aundh · 5.8 km',km:5.8,time:'Flexible start',kind:'Long-term',duration:'Long-term',tag:'Painting',checked:['pay','where','when'],desc:'Looking for a painter for regular maintenance and repainting. Monday to Saturday, 9 am to 5 pm. Weekly day off by arrangement.'},
+{id:4,title:'Help repainting shop shutters',company:'Local shop owner',pay:'₹700',unit:'for the job',place:'Kasba Peth · 1.6 km',km:1.6,time:'Today, after 4:00 pm',kind:'Today',duration:'Half day',tag:'Painting',checked:[],desc:'Two metal shutters need a fresh coat before the shop opens tomorrow. Please agree on paint type and final payment with the owner first.'}
+];
+const SKILLS=[['House painting','Added'],['Wall putty','Added'],['Available this week','Yes']];
+const TIPS=[['rupee','Pay shown upfront','Agree on the amount before you accept.'],['check-circle','Check the details','Confirm hours, location and materials.'],['help','Something feel wrong?','Get help without sharing your password or OTP.']];
+
+/* ---------- State + i18n ---------- */
+const $=s=>document.querySelector(s);
+let lang='en',view='home',filter='All work',query='',saved=new Set();
+try{saved=new Set(JSON.parse(localStorage.getItem('ks_saved')||'[]').filter(id=>jobs.some(j=>j.id===id)))}catch(e){}
+try{const sv=localStorage.getItem('ks_lang');if(sv==='en'||T[sv])lang=sv;else{const nl=(navigator.language||'').slice(0,2);if(T[nl])lang=nl}}catch(e){}
+const t=s=>lang==='en'?s:((T[lang]&&T[lang][s])||s);
+const ico=n=>`<svg class="ico" aria-hidden="true" focusable="false"><use href="#i-${n}"/></svg>`;
+
+function applyStatic(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{if(el.dataset.en===undefined)el.dataset.en=el.textContent.trim();el.textContent=t(el.dataset.en)});
+  document.querySelectorAll('[data-i18n-attr]').forEach(el=>el.dataset.i18nAttr.split(';').forEach(p=>{const i=p.indexOf(':');el.setAttribute(p.slice(0,i),t(p.slice(i+1)))}));
+}
+function setLang(l){
+  lang=l;try{localStorage.setItem('ks_lang',l)}catch(e){}
+  document.documentElement.lang=l;document.title=t('KaamSaathi — Work, on your terms');
+  document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lang===l));
+  applyStatic();closeSheet();render();
+}
+
+/* ---------- List ---------- */
+const hay=j=>[j.title,j.company,j.place,j.tag].flatMap(s=>[s,t(s)]).join(' ').toLowerCase();
+function visibleJobs(){
+  const q=query.trim().toLowerCase();
+  return jobs.filter(j=>{
+    if(view==='saved'&&!saved.has(j.id))return false;
+    if(filter==='Within 3 km'){if(j.km>3)return false}else if(filter!=='All work'&&j.kind!==filter)return false;
+    return !q||hay(j).includes(q);
+  });
+}
+function jobCard(j){
+  const on=saved.has(j.id),ok=ALL_CHECKS.every(k=>j.checked.includes(k)),title=t(j.title);
+  const fact=(i,l,v)=>`<div><dt class="sr-only">${t(l)}</dt><dd>${ico(i)}<span>${t(v)}</span></dd></div>`;
+  return `<li class="job">
+<div class="job-head"><h2 class="job-title"><button type="button" class="job-open" data-open="${j.id}">${title}</button></h2><p class="company">${t(j.company)}</p></div>
+<button type="button" class="save${on?' on':''}" data-save="${j.id}">${ico('heart')}${t(on?'Saved':'Save')}<span class="sr-only">: ${title}</span></button>
+<p class="pay"><span class="pay-amt">${j.pay}</span> <span class="pay-unit">${t(j.unit)}</span></p>
+<dl class="facts">${fact('pin','Where',j.place)}${fact('clock','When',j.time)}${fact('calendar','How long',j.duration)}</dl>
+<div class="job-foot"><p class="status ${ok?'ok':'no'}">${ico(ok?'check-circle':'info')}<span>${t(ok?'Pay, place and time checked':'Details not checked yet')}</span></p><span class="more" aria-hidden="true">${t('View details')}${ico('chevron')}</span></div>
+</li>`;
+}
+function emptyHTML(){
+  if(view==='saved'&&!saved.size)return `<li class="empty"><p>${t('You haven’t saved any jobs yet. Tap Save on a job to keep it here.')}</p><button type="button" class="btn-secondary" data-go="home">${t('Find work')}</button></li>`;
+  return `<li class="empty"><p>${t('No jobs found. Try a different word, or clear the filters.')}</p><button type="button" class="btn-secondary" data-clear>${t('Clear filters')}</button></li>`;
+}
+function skillsList(){return `<ul class="skills">${SKILLS.map(([a,b])=>`<li>${ico('check')}<span>${t(a)}</span><b>${t(b)}</b></li>`).join('')}</ul>`}
+function tipsList(){return `<ul class="tips">${TIPS.map(([i,a,b])=>`<li><span class="tip-ico">${ico(i)}</span><div><b>${t(a)}</b><span class="d">${t(b)}</span></div></li>`).join('')}</ul>`}
+function renderAside(){
+  $('#aside').innerHTML=`<section class="block"><h2>${t('Your skills card')}</h2><p class="who"><b>${t('Raju Pawar')}</b><span>${t('Painter · Pune')}</span></p>${skillsList()}<button type="button" class="link" data-dialog="profile">${t('About my skills card')}${ico('chevron')}</button></section>
+<section class="block"><h2>${t('Before you accept work')}</h2>${tipsList()}</section>
+<section class="block"><h2>${t('Support & your rights')}</h2><p>${t('Find useful documents, worker support and nearby help in one place.')}</p><button type="button" class="btn-secondary wide" data-dialog="help">${t('Explore support options')}</button></section>`;
+}
+function render(){
+  const rows=visibleJobs();
+  $('#pageTitle').textContent=t(view==='saved'?'Your saved jobs':'Find work near you');
+  $('#where').hidden=view==='saved';
+  $('#count').textContent=`${rows.length} ${t(rows.length===1?'job':'jobs')}`;
+  $('#jobs').innerHTML=rows.length?rows.map(jobCard).join(''):emptyHTML();
+  document.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',c.dataset.filter===filter));
+  document.querySelectorAll('.tab[data-tab]').forEach(b=>{const cur=b.dataset.tab===view;cur?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current')});
+  const bd=$('#badge');bd.hidden=!saved.size;bd.textContent=saved.size;
+  renderAside();
+}
+function setView(v){view=v;render();window.scrollTo(0,0)}
+function resetSearch(){query='';filter='All work';$('#search').value='';render()}
+function toggleSave(id){
+  const on=!saved.has(id);on?saved.add(id):saved.delete(id);
+  try{localStorage.setItem('ks_saved',JSON.stringify([...saved]))}catch(e){}
+  toast(t(on?'Job saved':'Removed from saved'));render();return on;
+}
+let toastTimer;
+function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3200)}
+
+/* ---------- Dialog (bottom sheet on phones, centred on larger screens) ---------- */
+const overlay=$('#overlay'),sheet=$('#sheet');let opener=null;
+function showSheet(d){
+  sheet.innerHTML=`<div class="sheet-head"><h2 id="dlgTitle">${d.title}</h2><button type="button" class="icon-btn" data-close aria-label="${t('Close')}">${ico('close')}</button></div><div class="sheet-body">${d.body}</div><div class="sheet-foot">${d.foot}</div>`;
+  if(!overlay.classList.contains('open')){opener=document.activeElement;overlay.classList.add('open');$('#app').inert=true;document.documentElement.classList.add('locked')}
+  sheet.scrollTop=0;sheet.querySelector('.sheet-body').scrollTop=0;sheet.focus();
+}
+function closeSheet(){
+  if(!overlay.classList.contains('open'))return;
+  overlay.classList.remove('open');$('#app').inert=false;document.documentElement.classList.remove('locked');
+  const o=opener;opener=null;
+  if(o){const el=document.contains(o)?o:(o.dataset&&o.dataset.open?document.querySelector(`[data-open="${o.dataset.open}"]`):null);if(el)el.focus()}
+  sheet.innerHTML='';
+}
+const gotIt=()=>`<button type="button" class="btn-primary" data-close>${t('Got it')}</button>`;
+function jobDialog(j){
+  const on=saved.has(j.id),any=j.checked.length>0,all=ALL_CHECKS.every(k=>j.checked.includes(k));
+  const term=(l,v)=>`<div><dt>${t(l)}</dt><dd>${t(v)}</dd></div>`;
+  const rows=[['pay','Pay'],['where','Where'],['when','When']].map(([k,l])=>{const c=j.checked.includes(k);return `<li class="check ${c?'yes':'no'}">${ico(c?'check-circle':'minus-circle')}<span>${t(l)}</span><b>${t(c?'Checked':'Not checked')}</b></li>`}).join('');
+  return{title:t(j.title),
+    body:`<p class="company">${t(j.company)}</p>
+<p class="status ${all?'ok':'no'}">${ico(all?'check-circle':'info')}<span>${t(all?'Pay, place and time checked':'Details not checked yet')}</span></p>
+<p class="pay"><span class="pay-amt">${j.pay}</span> <span class="pay-unit">${t(j.unit)}</span></p>
+<dl class="terms">${term('When',j.time)}${term('Where',j.place)}${term('How long',j.duration)}</dl>
+<p class="desc">${t(j.desc)}</p>
+<section class="checks${all?'':' none'}"><h3>${t('What has been checked')}</h3><ul>${rows}</ul><p>${t(any?'This does not confirm who the employer is, and it is not a promise of work or payment. Always confirm the final terms yourself.':'Nothing here has been checked yet. Confirm pay, place and time with the owner before you go.')}</p></section>
+<h3>${t('Before you go')}</h3>
+<ul class="plain"><li>${t('Agree on pay, and when you will be paid, before you travel.')}</li><li>${t('Call first to confirm the address and time.')}</li><li>${t('Never share an OTP or PIN, or pay a fee, to get a job.')}</li></ul>`,
+    foot:`<div class="foot-actions"><button type="button" class="btn-secondary${on?' on':''}" data-dsave="${j.id}">${ico('heart')}${t(on?'Saved':'Save')}</button><button type="button" class="btn-primary" data-interest>${t('I’m interested')}</button></div><p class="note">${t('This prototype won’t send your details or contact the employer.')}</p>`};
+}
+function profileDialog(){
+  return{title:t('Your skills card'),
+    body:`<p class="who"><b>${t('Raju Pawar')}</b><span style="color:var(--muted)">${t('Painter · Pune')}</span></p>${skillsList()}<p style="margin-top:12px">${t('Your card helps employers understand what you can do, even without a résumé. Add skills like exterior painting, wall putty or brush finishing, and set the days you are available.')}</p><p class="note" style="margin-top:12px">${t('Editing skills is not available in this preview yet.')}</p>`,
+    foot:gotIt()};
+}
+function helpDialog(){
+  return{title:t('Support & your rights'),
+    body:`<p>${t('Find nearby worker facilitation centres, learn which documents may help with registration, and see grievance and welfare scheme information. For real emergencies, contact local emergency services.')}</p><p class="note" style="margin-top:8px">${t('Support listings are not connected in this preview yet.')}</p>
+<h3>${t('Before you accept work')}</h3>${tipsList()}
+<h3>${t('What “checked” means')}</h3><p>${t('A job marked “checked” has had its pay, place and time checked. This does not confirm who the employer is, and it is not a promise of work or payment.')}</p>`,
+    foot:gotIt()};
+}
+const openInfo=k=>showSheet(k==='profile'?profileDialog():helpDialog());
+
+/* ---------- Events ---------- */
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-open],[data-save],[data-dsave],[data-interest],[data-dialog],[data-tab],[data-go],[data-clear],[data-close],[data-lang],[data-filter],#brand');
+  if(!el){if(e.target===overlay)closeSheet();return}
+  const d=el.dataset;
+  if(el.id==='brand'){e.preventDefault();setView('home')}
+  else if(d.open)showSheet(jobDialog(jobs.find(j=>j.id===+d.open)));
+  else if(d.save)toggleSave(+d.save);
+  else if(d.dsave){const id=+d.dsave,on=toggleSave(id);el.classList.toggle('on',on);el.innerHTML=ico('heart')+t(on?'Saved':'Save')}
+  else if(el.hasAttribute('data-interest')){closeSheet();toast(t('Preview only: nothing was sent to the employer.'))}
+  else if(d.dialog)openInfo(d.dialog);
+  else if(d.tab){d.tab==='home'||d.tab==='saved'?setView(d.tab):openInfo(d.tab)}
+  else if(d.go)setView(d.go);
+  else if(el.hasAttribute('data-clear'))resetSearch();
+  else if(el.hasAttribute('data-close'))closeSheet();
+  else if(d.lang)setLang(d.lang);
+  else if(d.filter){filter=d.filter;render()}
+});
+$('#searchForm').addEventListener('submit',e=>{e.preventDefault();query=$('#search').value;render();$('#search').blur()});
+$('#search').addEventListener('input',e=>{query=e.target.value;render()});
+document.addEventListener('keydown',e=>{
+  if(!overlay.classList.contains('open'))return;
+  if(e.key==='Escape'){closeSheet();return}
+  if(e.key!=='Tab')return;
+  const f=[...sheet.querySelectorAll('button,[href],input,[tabindex]:not([tabindex="-1"])')].filter(x=>!x.disabled&&x.offsetParent!==null);
+  if(!f.length)return;
+  const first=f[0],last=f[f.length-1];
+  if(e.shiftKey&&(document.activeElement===first||document.activeElement===sheet)){e.preventDefault();last.focus()}
+  else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
+});
+
+setLang(lang);
+</script>
+</body>
+</html>
